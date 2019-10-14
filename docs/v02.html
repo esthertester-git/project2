@@ -1,0 +1,54 @@
+<html>
+    <head>
+    <title>Grabbing JSON data from the New York Times</title>
+    <style>
+    	h1	{
+    		font-family: serif;
+    		}
+    	p	{
+    		font-family: Arial, Helvetica, sans-serif;
+    		margin-left: 30px;
+    	}
+    </style>
+    <!-- get p5.js from https://cdnjs.com -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.min.js"></script>
+    <script>
+        var url = "https://api.nytimes.com/svc/search/v2/articlesearch.json?q=rainbows&api-key=aaAZzAJc03wNEtWEaGHabA4OPbsVffbK"
+        var articleCount = 0;
+    
+    // load p5 javascript
+    function setup(){
+        noCanvas();
+        //send the URL and when data comes back, run "gotData"
+        loadJSON(url, gotData);
+    }
+    
+    function gotData(data){
+        appendToPage (data)
+        var hits = data.response.meta.hits
+        for (var i=1; i < 3; i++) {
+        loadJSON(url + '&page=' + i, appendToPage)
+        }
+    }
+    
+    function appendToPage(data){
+    var articles = data.response.docs;
+    for (i = 0; i < articles.length; i++){
+        articleCount++
+        h = document.createElement('h3')
+        h.innerHTML = '(' + articleCount + ') ' + articles[i].headline.main
+        document.body.appendChild(h)
+        p = document.createElement('p')
+        p.innerHTML = articles[i].snippet
+        document.body.appendChild(p);
+
+        }
+
+    }
+        
+    </script>
+    </head>
+    <body>
+    <h1>New York Times API - Articles About RAINBOWS</h1>
+    </body>
+</html>
